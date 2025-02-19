@@ -1,0 +1,18 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        apt-get update && apt-get install -y mysql-client
+        gcloud sql connect ochiai-test --user=cloud-build --quiet <<EOF
+        INSERT INTO main_db.HumanResources (Id, OrganizationId, CompanyId, HumanId, RoleId, ContractTypeId, DomainId,
+        Description, IsPrimary, IsAdditional, KinkanRequired, AttendanceRegisterRequired,
+        ManHourRegisterRequired, HRId, SlackId, TsunayoshiId, Email, StartDate, EndDate)
+        VALUES (999999999, 1, 1, 999999999, 50, 2, 1,
+        'Kinkanのdev環境テスト用アカウント。承認の動作確認用に作成。',
+        1, 1, 1, 1, 1, '_FOR_DEV_TEST', null, null, 'kinkan-dev-test@watanabe-test.sandbox.cloud-ace.dev',
+        '2018-07-01 00:00:00', null);
+        EOF
+options:
+  logging: CLOUD_LOGGING_ONLY
